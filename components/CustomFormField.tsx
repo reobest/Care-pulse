@@ -27,11 +27,11 @@ type FormFieldsType = {
     styles?: string;
     renderSkeleton?: any;
     children?: React.ReactNode;
-    cblabel?:string;
+    cblabel?: string;
 }
-const RenderInput = ({ field, placeholder, filedtype, renderSkeleton,  children , name  , cblabel }: {
+const RenderInput = ({ field, placeholder, filedtype, renderSkeleton, children, name, cblabel }: {
     field: any, placeholder: string | undefined, filedtype: string, renderSkeleton: any
-    ,  children: React.ReactNode | undefined , name : string , label:string | undefined,cblabel:string | undefined
+    , children: React.ReactNode | undefined, name: string, label: string | undefined, cblabel: string | undefined
 }) => {
     switch (filedtype) {
         case 'input':
@@ -123,7 +123,7 @@ const RenderInput = ({ field, placeholder, filedtype, renderSkeleton,  children 
             )
     }
 }
-const CustomFormField = ({ form, label, placeholder, name, filedtype, styles, renderSkeleton, children , cblabel }: FormFieldsType) => {
+const CustomFormField = ({ form, label, placeholder, name, filedtype, styles, renderSkeleton, children, cblabel }: FormFieldsType) => {
     return (
         <>
             <FormField
@@ -132,9 +132,17 @@ const CustomFormField = ({ form, label, placeholder, name, filedtype, styles, re
                 render={({ field }) => (
                     <FormItem className={`${styles}`}>
                         <FormLabel>{label}</FormLabel>
-                        <RenderInput field={field} placeholder={placeholder}
-                            filedtype={filedtype} renderSkeleton={renderSkeleton} 
-                             children={children} name={name} label={label} cblabel={cblabel} />
+                        <RenderInput
+                            field={field}
+                            placeholder={placeholder}
+                            filedtype={filedtype}
+                            renderSkeleton={renderSkeleton}
+                            name={name}
+                            label={label}
+                            cblabel={cblabel}
+                        >
+                            {children}
+                        </RenderInput>
                         <FormMessage />
                     </FormItem>
                 )}
