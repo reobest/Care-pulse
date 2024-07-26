@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Doctors } from '@/constants'
 import Link from 'next/link'
 import {  useRouter } from 'next/navigation'
-const page =  ({ searchParams: { id } }: { searchParams: any }) => {
+const AppointmentSuccess =  ({ searchParams: { id } }: { searchParams: any }) => {
     const router = useRouter()
     const [appointment, setAppointment] = useState<any>(null);
     const [newdoc, setNewdoc] = useState<any>(null);
@@ -92,4 +92,4 @@ const page =  ({ searchParams: { id } }: { searchParams: any }) => {
     )
 }
 
-export default page
+export default AppointmentSuccess

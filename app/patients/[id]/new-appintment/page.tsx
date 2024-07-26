@@ -3,7 +3,7 @@ import AppointmentForm from '@/components/forms/AppointmentForm'
 import Image from 'next/image'
 import React from 'react'
 import { useSearchParams } from 'next/navigation'
-const page = ({params}: {params:any}) => {
+const NewAppointment = ({params}: {params:any}) => {
   const searchparams = useSearchParams()
   const name = searchparams.get('name')
   return (
@@ -30,4 +30,4 @@ const page = ({params}: {params:any}) => {
   )
 }
 
-export default page
+export default NewAppointment
