@@ -9,8 +9,6 @@ import { Count } from '@/lib/utils'
 
 const Admin =  () => {
     const [appointments, setAppointments] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -23,17 +21,11 @@ const Admin =  () => {
                 setAppointments(data);
             } catch (error) {
                 console.error('Error fetching appointments:', error);
-                setError('Failed to fetch appointments');
-            } finally {
-                setLoading(false);
-            }
+            } 
         };
 
         fetchAppointments();
     }, []);
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
   return (
     <div className='w-full min-h-screen flex flex-col items-center'>
       <header className='w-[98vw] h-[50px] flex justify-between items-center p-3 bg-dark-200 rounded-md'>
