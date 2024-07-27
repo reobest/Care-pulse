@@ -1,14 +1,39 @@
-
+"use client"
 import CustomCards from '@/components/CustomCards'
-import { fetchAppointments } from '@/lib/patient'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from '@/components/table/columns'
 import { Count } from '@/lib/utils'
-const Admin = async () => {
-  const  appointments = await fetchAppointments()
+
+const Admin =  () => {
+    const [appointments, setAppointments] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            try {
+                const response = await fetch('/api/fetch-appointments');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch appointments');
+                }
+                const data = await response.json();
+                setAppointments(data);
+            } catch (error) {
+                console.error('Error fetching appointments:', error);
+                setError('Failed to fetch appointments');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAppointments();
+    }, []);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
   return (
     <div className='w-full min-h-screen flex flex-col items-center'>
       <header className='w-[98vw] h-[50px] flex justify-between items-center p-3 bg-dark-200 rounded-md'>
