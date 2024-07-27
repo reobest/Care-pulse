@@ -89,8 +89,8 @@ const RenderInput = ({ field, placeholder, filedtype, renderSkeleton, children, 
                             className='cursor-pointer flex text-center text-sm'
                             selected={field.value}
                             onChange={(date) => field.onChange(date)}
-                            dateFormat={'MM/DD/YYYY'}
-                            showTimeSelect={false}
+                            dateFormat='MM/dd/yyyy'
+                            showTimeSelect={true}
                             timeInputLabel='Time:'
                         />
                     </div>

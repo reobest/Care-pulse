@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -29,7 +29,7 @@ type AppointmentFormTypes = {
     userId?: string;
 }
 const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
-    const currentDate = new Date(Date.now());
+    const currentDate = new Date();
     const formattedDate = currentDate.toLocaleString();
     const router = useRouter()
     const form = useForm<z.infer<typeof CreateAppointmentSchema>>({
@@ -55,6 +55,7 @@ const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
             type: "pending",
         }
         if (type === 'pending') {
+            
             const docRef = await addDoc(collection(db, "Appointment"), UserData);
             if (docRef) {
                 router.push(`/patients/${id}/new-appintment/success?id=${docRef.id}`)
@@ -67,6 +68,7 @@ const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
                 reason: values.reason,
                 type: 'schedule',
             };
+            
             const docRef = doc(db, "Appointment", userId as string);
             await updateDoc(docRef, updatedData)
 
