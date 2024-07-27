@@ -6,22 +6,23 @@ import React, { useEffect, useState } from 'react'
 import { DataTable } from '@/components/table/data-table'
 import { columns } from '@/components/table/columns'
 import { Count } from '@/lib/utils'
-
+import { getDocs, collection } from 'firebase/firestore';
+import { db } from '@/firebase/firebaseConfig';
 const Admin =  () => {
-    const [appointments, setAppointments] = useState<any[]>([]);
-
+    const [appointments, setAppointments] = useState<any[]>([]); 
     useEffect(() => {
         const fetchAppointments = async () => {
-            try {
-                const response = await fetch('/api/fetch-appointments');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch appointments');
-                }
-                const data = await response.json();
-                setAppointments(data);
-            } catch (error) {
-                console.error('Error fetching appointments:', error);
-            } 
+          try {
+            const querySnapshot = await getDocs(collection(db, 'Appointment'));
+            const fetched: any[] = [];
+            querySnapshot.forEach((doc) => {
+                fetched.push({ id: doc.id, ...doc.data() });
+            });
+            setAppointments(fetched)
+        } catch (error) {
+            console.error('Error fetching appointments:', error);
+            throw new Error('Failed to fetch appointments');
+        }
         };
 
         fetchAppointments();
