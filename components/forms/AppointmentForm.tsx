@@ -1,5 +1,7 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -12,6 +14,7 @@ import CustomFormField from '../CustomFormField'
 import { useRouter } from 'next/navigation'
 import { Doctors } from '@/constants'
 import Image from 'next/image'
+import { format } from 'date-fns';
 export const CreateAppointmentSchema = z.object({
     primaryPhysician: z.string().min(2, "Select at least one doctor"),
     schedule: z.string(),
@@ -29,14 +32,14 @@ type AppointmentFormTypes = {
     userId?: string;
 }
 const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
-    const currentDate = new Date(Date.now());
-    const formattedDate = currentDate.toLocaleString();
+    const [startDate, setStartDate] = useState(new Date());
+    const formatedDate = format(startDate, "HH:mm:ss EEEE MMM dd yyyy")
     const router = useRouter()
     const form = useForm<z.infer<typeof CreateAppointmentSchema>>({
         resolver: zodResolver(CreateAppointmentSchema),
         defaultValues: {
             primaryPhysician: "",
-            schedule: formattedDate,
+            schedule: formatedDate,
             reason: "",
             note: "",
             cancel: "",
@@ -45,11 +48,12 @@ const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
     })
 
     async function onSubmit(values: z.infer<typeof CreateAppointmentSchema>) {
+
         const UserData = {
             Patientname: name,
             Patientid: id,
             primaryPhysician: values.primaryPhysician,
-            schedule: values.schedule,
+            schedule: formatedDate as string,
             reason: values.reason,
             note: values.note,
             type: "pending",
@@ -73,7 +77,7 @@ const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
             router.push(`/`);
         }
     }
-    const handlesubmit = async () => {  
+    const handlesubmit = async () => {
         if (type === 'cancel' && userId) {
             const updatedData = {
                 cancellationReason: form.getValues().reason,
@@ -84,11 +88,15 @@ const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
             router.push(`/`);
         }
     }
+    const handleClick = () => {
+        console.log(startDate);
+    }
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-[80%]">
                 {type === 'pending' && (
                     <>
+                        <button onClick={handleClick}>Rayan</button>
                         <h1 className='text-white w-[100%] text-start text-3xl font-semibold my-8'>New Appointment</h1>
                         <p className='text-slate-400 w-[100%] text-start text-xs my-8'>Request a new appointment in 10 secondes</p>
                         <CustomFormField
@@ -113,13 +121,26 @@ const RegisterForm = ({ id, name, type, userId }: AppointmentFormTypes) => {
                                 </SelectItem>
                             ))}
                         </CustomFormField>
-                        <CustomFormField
-                            form={form.control}
-                            label="Expected appointment date"
-                            name="birthDate"
-                            filedtype='date-picker'
-                            styles="mb-4 mt-4"
-                        />
+                        <div className="flex flex-col mt-6 w-full space-y-3">
+                            <h3 className='text-[15px]'>Expected appointment date</h3>
+                            <div className="flex items-center w-full h-[40px] rounded-md border border-dark-500 bg-dark-400">
+                                <Image
+                                    src="/assets/icons/calendar.svg"
+                                    height={20}
+                                    width={20}
+                                    alt="user"
+                                    className="ml-2"
+                                />
+                                <DatePicker
+                                    className='cursor-pointer flex text-center text-sm'
+                                    selected={startDate}
+                                    onChange={(date: any) => setStartDate(date)}
+                                    dateFormat='MM/dd/yyyy'
+                                    showTimeSelect={true}
+                                    timeInputLabel='Time:'
+                                />
+                            </div>
+                        </div>
                         <CustomFormField
                             form={form.control}
                             label="Family medical history"

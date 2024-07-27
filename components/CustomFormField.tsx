@@ -5,8 +5,6 @@ import { Control } from 'react-hook-form'
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { E164Number } from "libphonenumber-js/core";
-import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import {
@@ -74,29 +72,6 @@ const RenderInput = ({ field, placeholder, filedtype, renderSkeleton, children, 
                     </Select>
                 </FormControl>
             );
-        case 'date-picker':
-            return (
-                <FormControl >
-                    <div className="flex w-full h-[30px] rounded-md border border-dark-500 bg-dark-400">
-                        <Image
-                            src="/assets/icons/calendar.svg"
-                            height={20}
-                            width={20}
-                            alt="user"
-                            className="ml-2"
-                        />
-                        <DatePicker
-                            className='cursor-pointer flex text-center text-sm'
-                            selected={field.value}
-                            onChange={(date) => field.onChange(date)}
-                            dateFormat='MM/dd/yyyy'
-                            showTimeSelect={true}
-                            timeInputLabel='Time:'
-                        />
-                    </div>
-
-                </FormControl>
-            )
         case 'textarea':
             return (
                 <FormControl>

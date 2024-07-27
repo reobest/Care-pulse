@@ -1,5 +1,8 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
+import DatePicker from 'react-datepicker'
+import { format } from 'date-fns';
+import "react-datepicker/dist/react-datepicker.css";
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -26,7 +29,7 @@ export const PatientFormValidation = z.object({
     phone: z
         .string()
         .refine((phone) => /^\+\d{10,15}$/.test(phone), "Invalid phone number"),
-    birthDate: z.coerce.date(),
+    birthDate: z.string(),
     gender: z.enum(["Male", "Female", "Other"]),
     address: z
         .string()
@@ -83,6 +86,8 @@ export const PatientFormValidation = z.object({
 });
 
 const RegisterForm = ({ id }: { id: string }) => {
+    const [startDate, setStartDate] = useState(new Date());
+    const formatedDate = format(startDate, "HH:mm:ss EEEE MMM dd yyyy")
     const router = useRouter()
     const form = useForm<z.infer<typeof PatientFormValidation>>({
         resolver: zodResolver(PatientFormValidation),
@@ -90,7 +95,7 @@ const RegisterForm = ({ id }: { id: string }) => {
             name: "",
             email: "",
             phone: "",
-            birthDate: new Date(Date.now()),
+            birthDate: formatedDate as string,
             gender: "Male",
             address: "",
             occupation: "",
@@ -133,7 +138,7 @@ const RegisterForm = ({ id }: { id: string }) => {
                         name: values.name,
                         email: values.email,
                         phone: values.phone,
-                        birthDate: new Date(Date.now()),
+                        birthDate: formatedDate as string,
                         gender: values.gender,
                         address: values.address,
                         occupation: values.occupation,
@@ -194,13 +199,26 @@ const RegisterForm = ({ id }: { id: string }) => {
                     />
                 </div>
                 <div className='w-full flex flex-col md:flex-row md:justify-between gap-3 mt-5'>
-                    <CustomFormField
-                        form={form.control}
-                        label={Labels.LabelFour}
-                        name="birthDate"
-                        filedtype='date-picker'
-                        styles="mb-4"
-                    />
+                    <div className="flex flex-col mt-6 w-full space-y-3">
+                        <h3 className='text-[15px]'>Birth Date</h3>
+                        <div className="flex items-center w-full h-[40px] rounded-md border border-dark-500 bg-dark-400">
+                            <Image
+                                src="/assets/icons/calendar.svg"
+                                height={20}
+                                width={20}
+                                alt="user"
+                                className="ml-2"
+                            />
+                            <DatePicker
+                                className='cursor-pointer flex text-center text-sm'
+                                selected={startDate}
+                                onChange={(date: any) => setStartDate(date)}
+                                dateFormat='MM/dd/yyyy'
+                                showTimeSelect={true}
+                                timeInputLabel='Time:'
+                            />
+                        </div>
+                    </div>
                     <CustomFormField
                         filedtype='gender'
                         form={form.control}
