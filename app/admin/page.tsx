@@ -67,6 +67,7 @@ const Admin =  () => {
       <section className='w-full data-table-scroll-bar overflow-scroll'>
         <DataTable columns={columns} data={appointments}/>
       </section>
+      
     </div>
   )
 }
